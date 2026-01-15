@@ -14,6 +14,7 @@ final class VideoViewModel: NSObject, ObservableObject {
     private let subscribers = Safe<String, OTSubscriber>()
     private let controller: SessionController
     @Published private(set) var connectivity: Connectivity = .disconnected
+    @Published private(set) var video: UIView?
 
     init(controller: SessionController) {
         self.controller = controller
@@ -47,7 +48,7 @@ extension VideoViewModel: OTSessionDelegate {
     }
     
     func session(_ session: OTSession, streamCreated stream: OTStream) {
-        guard let subscriber = OTSubscriber(stream: stream, delegate: nil) else { return }
+        guard let subscriber = OTSubscriber(stream: stream, delegate: self) else { return }
         var error: OTError?
         session.subscribe(subscriber, error: &error)
         if error != nil {
@@ -68,5 +69,34 @@ extension VideoViewModel: OTSessionDelegate {
             }
             Task { await subscribers.set(nil, for: stream.streamId) }
         }
+    }
+}
+
+extension VideoViewModel: OTSubscriberDelegate {
+    func subscriberDidConnect(toStream subscriber: OTSubscriberKit) {
+        guard let subscriber = subscriber as? OTSubscriber else { return }
+        video = subscriber.view
+    }
+
+    func subscriberDidReconnect(toStream subscriber: OTSubscriberKit) {
+        guard let subscriber = subscriber as? OTSubscriber else { return }
+        video = subscriber.view
+    }
+
+    func subscriberDidDisconnect(fromStream subscriber: OTSubscriberKit) {
+        video = nil
+    }
+
+    func subscriberVideoEnabled(_ subscriber: OTSubscriberKit, reason: OTSubscriberVideoEventReason) {
+        guard let subscriber = subscriber as? OTSubscriber else { return }
+        video = subscriber.view
+    }
+
+    func subscriberVideoDisabled(_ subscriber: OTSubscriberKit, reason: OTSubscriberVideoEventReason) {
+        video = nil
+    }
+
+    func subscriber(_ subscriber: OTSubscriberKit, didFailWithError error: OTError) {
+        // This doens't need to be user facing error - would be nice to set up some logging for debugging
     }
 }
