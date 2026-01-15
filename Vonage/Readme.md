@@ -11,3 +11,6 @@
 ## Features
 
 ## Architecture
+
+## Decisions
+- Due to iOS 15+ requirement I decided to use a mix of SwiftUI (Views) and UIKit (Navigation). Decision is influenced by low maturity of SwiftUI navigation before `NavigationStack` introduction
