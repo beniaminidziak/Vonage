@@ -10,6 +10,8 @@
 
 ## Features
 - Permissions handling ✅
+- Joining calls and handling connection states ✅
+- Display remote participant video stream ✅
 
 ## Architecture
 
