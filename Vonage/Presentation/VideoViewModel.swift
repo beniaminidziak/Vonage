@@ -12,6 +12,7 @@ import OpenTok
 final class VideoViewModel: NSObject, ObservableObject {
     // Dictionary is not thread safe - `Safe` type with isolated actor allows safe subscriber storage
     private let subscribers = Safe<String, OTSubscriber>()
+    private var publisher: OTPublisher?
     private let controller: SessionController
     @Published private(set) var connectivity: Connectivity = .disconnected
     @Published private(set) var video: UIView?
@@ -37,10 +38,12 @@ final class VideoViewModel: NSObject, ObservableObject {
 extension VideoViewModel: OTSessionDelegate {
     func sessionDidConnect(_ session: OTSession) {
         connectivity = .connected
+        createPublisher(session)
     }
     
     func sessionDidDisconnect(_ session: OTSession) {
         connectivity = .disconnected
+        destroyPublisher(session)
     }
     
     func session(_ session: OTSession, didFailWithError error: OTError) {
@@ -69,6 +72,21 @@ extension VideoViewModel: OTSessionDelegate {
             }
             Task { await subscribers.set(nil, for: stream.streamId) }
         }
+    }
+
+    private func createPublisher(_ session: OTSession) {
+        let settings = OTPublisherSettings()
+        guard let publisher = OTPublisher(delegate: nil, settings: settings) else { return }
+        self.publisher = publisher
+        // TODO: Publishing might fail but user might still be able to see subscribers - need some other way than full screen cover error view to display this kinds of errors
+        session.publish(publisher, error: nil)
+    }
+
+    private func destroyPublisher(_ session: OTSession) {
+        guard let publisher else { return }
+        // Not sure if we should even remove it upon disconnection as documentation and examples are lacking information. Doing it for the sake of memory management but not handling error
+        session.unpublish(publisher, error: nil)
+        self.publisher = nil
     }
 }
 
