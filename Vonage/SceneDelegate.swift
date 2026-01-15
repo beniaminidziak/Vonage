@@ -11,11 +11,17 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+
+    private lazy var permissionsController = AVPermissionsController()
     private lazy var navigationController = UINavigationController(
         rootViewController: UIHostingController(
-            rootView: HomeView(action: presentVideoCallViewController)
+            rootView: HomeView(action: attemptVideoCallPresentation)
         )
     )
+
+    private var isPreparedForVideoConversation: Bool {
+        permissionsController.status(.audio) && permissionsController.status(.video)
+    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -24,11 +30,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
-    
+
+    private func attemptVideoCallPresentation() {
+        if isPreparedForVideoConversation {
+            presentVideoCallViewController()
+        } else {
+            presentPermissionsViewController()
+        }
+    }
+
     private func presentPermissionsViewController() {
-        let controller = AVPermissionsController()
-        let model = PermissionsViewModel(controller: controller)
-        let view = PermissionsView(model: model) {}
+        let model = PermissionsViewModel(controller: permissionsController)
+        let view = PermissionsView(model: model) { [weak self] in
+            guard let self else { return }
+            navigationController.popViewController(animated: false)
+            presentVideoCallViewController()
+        }
 
         navigationController.show(UIHostingController(rootView: view), sender: self)
     }
