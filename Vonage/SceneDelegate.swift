@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -14,9 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         window = UIWindow(windowScene: windowScene)
-        let controller = UIViewController()
-        controller.view.backgroundColor = .red
-        window?.rootViewController = controller
+        window?.rootViewController = UIHostingController(rootView: HomeView{})
         window?.makeKeyAndVisible()
     }
 }
