@@ -1,7 +1,5 @@
 # Vonage Video Communicator
 
-## Overview
-
 ## Requirements
 
 - **iOS:** 15.0+
@@ -46,7 +44,7 @@ let controller = VonageSessionController(
   - Enable/Disable camera
   - End call with clean disconnection
 - ✅ **Permissions Handling:** Camera and microphone permission requests with Settings app integration
-- ✅ **Error Handling:** 
+- ✅ **Error Handling** 
 - ✅ **Connection States:** Visual feedback for all connection states
 
 ## Architecture
