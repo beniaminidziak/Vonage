@@ -16,6 +16,7 @@ final class VideoViewModel: NSObject, ObservableObject {
     private let controller: SessionController
     @Published private(set) var connectivity: Connectivity = .disconnected
     @Published private(set) var video: UIView?
+    @Published private(set) var preview: UIView?
 
     init(controller: SessionController) {
         self.controller = controller
@@ -76,7 +77,7 @@ extension VideoViewModel: OTSessionDelegate {
 
     private func createPublisher(_ session: OTSession) {
         let settings = OTPublisherSettings()
-        guard let publisher = OTPublisher(delegate: nil, settings: settings) else { return }
+        guard let publisher = OTPublisher(delegate: self, settings: settings) else { return }
         self.publisher = publisher
         // TODO: Publishing might fail but user might still be able to see subscribers - need some other way than full screen cover error view to display this kinds of errors
         session.publish(publisher, error: nil)
@@ -115,6 +116,21 @@ extension VideoViewModel: OTSubscriberDelegate {
     }
 
     func subscriber(_ subscriber: OTSubscriberKit, didFailWithError error: OTError) {
+        // This doens't need to be user facing error - would be nice to set up some logging for debugging
+    }
+}
+
+extension VideoViewModel: OTPublisherDelegate {
+    public func publisher(_ publisher: OTPublisherKit, streamCreated stream: OTStream) {
+        guard let publisher = publisher as? OTPublisher else { return }
+        preview = publisher.view
+    }
+
+    public func publisher(_ publisher: OTPublisherKit, streamDestroyed stream: OTStream) {
+        self.preview = nil
+    }
+
+    public func publisher(_ publisher: OTPublisherKit, didFailWithError error: OTError) {
         // This doens't need to be user facing error - would be nice to set up some logging for debugging
     }
 }
