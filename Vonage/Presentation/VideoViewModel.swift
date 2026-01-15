@@ -15,6 +15,8 @@ final class VideoViewModel: NSObject, ObservableObject {
     private var publisher: OTPublisher?
     private let controller: SessionController
     @Published private(set) var connectivity: Connectivity = .disconnected
+    @Published private(set) var isVideoEnabled: Bool = true
+    @Published private(set) var isAudioEnabled: Bool = true
     @Published private(set) var video: UIView?
     @Published private(set) var preview: UIView?
 
@@ -33,6 +35,18 @@ final class VideoViewModel: NSObject, ObservableObject {
 
     func disconnect() {
         try? controller.disconnect()
+    }
+
+    func toggleAudio() {
+        guard let publisher else { return }
+        isAudioEnabled.toggle()
+        publisher.publishAudio = isAudioEnabled
+    }
+
+    func toggleVideo() {
+        guard let publisher else { return }
+        isVideoEnabled.toggle()
+        publisher.publishVideo = isVideoEnabled
     }
 }
 
@@ -123,6 +137,8 @@ extension VideoViewModel: OTSubscriberDelegate {
 extension VideoViewModel: OTPublisherDelegate {
     public func publisher(_ publisher: OTPublisherKit, streamCreated stream: OTStream) {
         guard let publisher = publisher as? OTPublisher else { return }
+        isAudioEnabled = publisher.publishAudio
+        isVideoEnabled = publisher.publishVideo
         preview = publisher.view
     }
 

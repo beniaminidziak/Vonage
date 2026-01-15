@@ -32,7 +32,7 @@ struct VideoView: View {
                     StreamView(view: model.video)
                     PreviewView(view: model.preview)
                 }
-                Button("Leave", role: .destructive) { model.disconnect() }
+                controls
             }
         case .disconnected:
             FarewellView(reconnect: model.connect)
@@ -91,6 +91,30 @@ struct VideoView: View {
                     .cornerRadius(25)
                 }
             }
+        }
+    }
+
+    private var controls: some View {
+        HStack(spacing: 8) {
+            Spacer()
+            Button(action: model.toggleAudio) {
+                Image(systemName: model.isAudioEnabled ? "mic.fill" : "mic.slash.fill")
+                    .font(.system(size: 22))
+            }
+            .frame(width: 56, height: 56)
+            .buttonStyle(.control)
+            Button(action: model.disconnect) {
+                Image(systemName: "phone.fill")
+                    .font(.system(size: 22))
+            }
+            .frame(width: 56, height: 56)
+            .buttonStyle(.destructive)
+            Button(action: model.toggleVideo) {
+                Image(systemName: model.isVideoEnabled ? "video.fill" : "video.slash.fill")
+            }
+            .frame(width: 56, height: 56)
+            .buttonStyle(.control)
+            Spacer()
         }
     }
 }
