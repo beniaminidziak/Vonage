@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5F32289D2F1935F0004FD2FF /* VonageClientSDKVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 5F32289C2F1935F0004FD2FF /* VonageClientSDKVideo */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5F32286B2F192579004FD2FF /* Vonage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vonage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F32289D2F1935F0004FD2FF /* VonageClientSDKVideo in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Vonage;
 			packageProductDependencies = (
+				5F32289C2F1935F0004FD2FF /* VonageClientSDKVideo */,
 			);
 			productName = Vonage;
 			productReference = 5F32286B2F192579004FD2FF /* Vonage.app */;
@@ -108,6 +114,9 @@
 			);
 			mainGroup = 5F3228622F192579004FD2FF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5F32289B2F1935F0004FD2FF /* XCRemoteSwiftPackageReference "vonage-video-client-sdk-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5F32286C2F192579004FD2FF /* Products */;
 			projectDirPath = "";
@@ -349,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5F32289B2F1935F0004FD2FF /* XCRemoteSwiftPackageReference "vonage-video-client-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Vonage/vonage-video-client-sdk-swift";
+			requirement = {
+				kind = exactVersion;
+				version = 2.32.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5F32289C2F1935F0004FD2FF /* VonageClientSDKVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5F32289B2F1935F0004FD2FF /* XCRemoteSwiftPackageReference "vonage-video-client-sdk-swift" */;
+			productName = VonageClientSDKVideo;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5F3228632F192579004FD2FF /* Project object */;
 }

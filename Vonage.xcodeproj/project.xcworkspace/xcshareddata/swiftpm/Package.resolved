@@ -1,0 +1,15 @@
+{
+  "originHash" : "1f686e0dc5a1f2b25f7eb5501fb83b031803f075648b53a0585a672de83e706d",
+  "pins" : [
+    {
+      "identity" : "vonage-video-client-sdk-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Vonage/vonage-video-client-sdk-swift",
+      "state" : {
+        "revision" : "70bfd195ab2c3e5cfcd2c84a30275806a841ae68",
+        "version" : "2.32.1"
+      }
+    }
+  ],
+  "version" : 3
+}
