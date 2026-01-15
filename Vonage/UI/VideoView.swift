@@ -27,7 +27,7 @@ struct VideoView: View {
         case .connecting:
             connecting
         case .connected:
-            Button("Leave", role: .destructive) { dismiss() }
+            Button("Leave", role: .destructive) { model.disconnect() }
         case .disconnected:
             FarewellView(reconnect: model.connect)
         case let .failed(message):
