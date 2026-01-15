@@ -1,0 +1,90 @@
+//
+//  VideoView.swift
+//  Vonage
+//
+//  Created by Beniamin Idziak on 15/01/2026.
+//
+
+
+import SwiftUI
+
+struct VideoView: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject var model: VideoViewModel
+
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            content
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear(perform: model.connect)
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch model.connectivity {
+        case .connecting:
+            connecting
+        case .connected:
+            Button("Leave", role: .destructive) { dismiss() }
+        case .disconnected:
+            FarewellView(reconnect: model.connect)
+        case let .failed(message):
+            failed(message)
+        }
+    }
+
+    private var connecting: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                .scaleEffect(1.5)
+        }
+    }
+
+    private func failed(_ message: String) -> some View {
+        VStack(spacing: 24) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 60))
+                .foregroundColor(.red)
+
+            Text("Operation Failed")
+                .font(.title2)
+                .foregroundColor(.white)
+
+            Text(message)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+
+            VStack(spacing: 8) {
+                Button(action: model.connect) {
+                    HStack {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Try Again")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 16)
+                    .background(Color.blue)
+                    .cornerRadius(25)
+                }
+
+                Button { dismiss() } label: {
+                    HStack {
+                        Text("Leave")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 16)
+                    .background(Color.red)
+                    .cornerRadius(25)
+                }
+            }
+        }
+    }
+}
