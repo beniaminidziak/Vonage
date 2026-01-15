@@ -3,7 +3,7 @@
 ## Requirements
 
 - **iOS:** 15.0+
-- **Xcode:** 14.0+
+- **Xcode:** 26.0+
 - **Swift:** 5.9+
 - **Account:** Vonage Developer Account
 
