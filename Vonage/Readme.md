@@ -12,6 +12,7 @@
 - Permissions handling ✅
 - Joining calls and handling connection states ✅
 - Display remote participant video stream ✅
+- Show the local camera feed ✅
 
 ## Architecture
 

@@ -27,8 +27,11 @@ struct VideoView: View {
         case .connecting:
             connecting
         case .connected:
-            ZStack {
-                StreamView(view: model.video)
+            ZStack(alignment: .bottom) {
+                ZStack(alignment: .topTrailing) {
+                    StreamView(view: model.video)
+                    PreviewView(view: model.preview)
+                }
                 Button("Leave", role: .destructive) { model.disconnect() }
             }
         case .disconnected:
