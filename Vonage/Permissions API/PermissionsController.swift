@@ -7,5 +7,5 @@
 
 protocol PermissionsController {
     func request(_ media: Media) async -> Bool
-    func status(_ media: Media) -> Authorization
+    func status(_ media: Media) -> Bool
 }

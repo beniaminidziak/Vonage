@@ -11,24 +11,16 @@ import UIKit
 final class AVPermissionsController: PermissionsController {
     func request(_ media: Media) async -> Bool {
         let media = map(media)
-        return switch status(media) {
+        return switch AVCaptureDevice.authorizationStatus(for: media) {
         case .authorized: true
-        case .pending: await AVCaptureDevice.requestAccess(for: media)
-        case .unauthorized: settings()
+        case .notDetermined: await AVCaptureDevice.requestAccess(for: media)
+        case .denied, .restricted: settings()
+        @unknown default: false
         }
     }
 
-    func status(_ media: Media) -> Authorization {
-        status(map(media))
-    }
-
-    private func status(_ media: AVMediaType) -> Authorization {
-        switch AVCaptureDevice.authorizationStatus(for: media) {
-        case .notDetermined: .pending
-        case .authorized: .authorized
-        case .denied, .restricted: .unauthorized
-        @unknown default: .unauthorized
-        }
+    func status(_ media: Media) -> Bool {
+        AVCaptureDevice.authorizationStatus(for: map(media)) == .authorized
     }
 
     private func map(_ media: Media) -> AVMediaType {
