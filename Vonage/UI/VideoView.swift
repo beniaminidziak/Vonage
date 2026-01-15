@@ -30,7 +30,7 @@ struct VideoView: View {
             ZStack(alignment: .bottom) {
                 ZStack(alignment: .topTrailing) {
                     StreamView(view: model.video)
-                    PreviewView(view: model.preview)
+                    PreviewView(preview: model.preview)
                 }
                 controls
             }
@@ -111,6 +111,7 @@ struct VideoView: View {
             .buttonStyle(.destructive)
             Button(action: model.toggleVideo) {
                 Image(systemName: model.isVideoEnabled ? "video.fill" : "video.slash.fill")
+                    .font(.system(size: 22))
             }
             .frame(width: 56, height: 56)
             .buttonStyle(.control)

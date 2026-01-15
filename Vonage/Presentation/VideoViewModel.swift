@@ -18,7 +18,7 @@ final class VideoViewModel: NSObject, ObservableObject {
     @Published private(set) var isVideoEnabled: Bool = true
     @Published private(set) var isAudioEnabled: Bool = true
     @Published private(set) var video: UIView?
-    @Published private(set) var preview: UIView?
+    @Published private(set) var preview: Preview = .placeholder
 
     init(controller: SessionController) {
         self.controller = controller
@@ -92,9 +92,14 @@ extension VideoViewModel: OTSessionDelegate {
     private func createPublisher(_ session: OTSession) {
         let settings = OTPublisherSettings()
         guard let publisher = OTPublisher(delegate: self, settings: settings) else { return }
+        var error: OTError?
+        session.publish(publisher, error: &error)
+        if error != nil {
+            // Failure to publish allows user to retry upon interaction
+            preview = .failure({ [weak self] in self?.createPublisher(session) })
+            return
+        }
         self.publisher = publisher
-        // TODO: Publishing might fail but user might still be able to see subscribers - need some other way than full screen cover error view to display this kinds of errors
-        session.publish(publisher, error: nil)
     }
 
     private func destroyPublisher(_ session: OTSession) {
@@ -139,11 +144,15 @@ extension VideoViewModel: OTPublisherDelegate {
         guard let publisher = publisher as? OTPublisher else { return }
         isAudioEnabled = publisher.publishAudio
         isVideoEnabled = publisher.publishVideo
-        preview = publisher.view
+        if let view = publisher.view {
+            preview = .view(view)
+        } else {
+            preview = .placeholder
+        }
     }
 
     public func publisher(_ publisher: OTPublisherKit, streamDestroyed stream: OTStream) {
-        self.preview = nil
+        self.preview = .placeholder
     }
 
     public func publisher(_ publisher: OTPublisherKit, didFailWithError error: OTError) {

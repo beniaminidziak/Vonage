@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PreviewView: View {
-    let view: UIView?
+    let preview: Preview
 
     var body: some View {
         content
@@ -20,11 +20,23 @@ struct PreviewView: View {
 
     @ViewBuilder
     private var content: some View {
-        if let view {
+        switch preview {
+        case let .view(view):
             FlexibleView(view: view)
-        } else {
+        case let .failure(action):
+            retry(action: action)
+        case .placeholder:
             placeholder
         }
+    }
+
+    private func retry(action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: "repeat")
+                .font(.system(size: 22))
+        }
+        .frame(width: 56, height: 56)
+        .buttonStyle(.control)
     }
 
     private var placeholder: some View {
